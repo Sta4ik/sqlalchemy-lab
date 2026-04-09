@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, DateTime, ForeignKey, NVARCHAR
+from sqlalchemy import create_engine, Column, Integer, Date, ForeignKey, NVARCHAR, text
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 import credits as cred
 
@@ -25,7 +25,7 @@ class Student(Base):
     name = Column(NVARCHAR(10))
     surname = Column(NVARCHAR(10))
     second_name = Column(NVARCHAR(10))
-    birthday = Column(DateTime)
+    birthday = Column(Date)
     groups = Column(Integer, ForeignKey("GROUPS.id_group"))
 
     group = relationship("Group", back_populates="students")
@@ -126,9 +126,18 @@ session.commit()
 
 # 7 Задание
 
+session.execute(text("ALTER TABLE SUBJECTS ADD EXAM_TYPE NVARCHAR(10)"))
+session.commit()
 
+session.execute(text("UPDATE SUBJECTS SET EXAM_TYPE = 'Экзамен' WHERE EXAM_TYPE IS NULL"))
+session.commit()
 
+session.execute(text("UPDATE SUBJECTS SET EXAM_TYPE = 'Зачёт' WHERE name_subject = 'Основы алгоритмизации'"))
+session.commit()
 
+# 8 Задание
 
+session.execute(text("ALTER TABLE STUDENTS DROP COLUMN SECOND_NAME"))
+session.commit()
 
 session.close()
